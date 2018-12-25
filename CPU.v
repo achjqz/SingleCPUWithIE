@@ -5,7 +5,7 @@ module CPU(Clk, Clrn, Inst, Dread, Iaddr, Wmem, Dwirte, Daddr, intr, inta);
 	output [31:0] Iaddr, Daddr, Dwirte;
 	output Wmem, inta;
 	
-    parameter EXC_BASE = 32'h00000014;
+    parameter EXC_BASE = 32'h00000020;
     wire [31:0] p4, adr, npc, res, ra, alu_mem, alua, alub;
     wire [4:0] reg_dest, wn;
     wire [3:0] aluc;
@@ -37,7 +37,7 @@ module CPU(Clk, Clrn, Inst, Dread, Iaddr, Wmem, Dwirte, Daddr, intr, inta);
     ControlUnit CU (Inst[31:26], Inst[5:0], zero,Inst[25:21],Inst[15:11],  Wmem, wreg, regrt, reg2reg, aluc,shift, aluqb, Pcsrc, jal, se,
         intr,inta,overflow,sta,cause,exc,wsta,wcau,wepc,mtc0,mfc0,selpc);
         
-	dff32 ip (npc , Clk , Clrn , Iaddr); 
+	dff32 ip (next_pc , Clk , Clrn , Iaddr); 
 
 	cla32 pcplus4(Iaddr , 32'h4 , 1'b0 , p4);
 
