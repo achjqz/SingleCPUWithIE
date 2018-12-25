@@ -7,8 +7,6 @@ module INSTMEM(Addr, Inst);
 	assign Ram[5'h02] = 32'h3C018000; //lui R1 , 0x1111
 	assign Ram[5'h03] = 32'h3C028000; //lui R2 , 0x1111
 	assign Ram[5'h04] = 32'h00411820; //add R3 , R1 , R2
-
-
 	assign Ram[5'h05] = 32'h10220001; //beq R2 , R1 , 1
 	assign Ram[5'h07] = 32'h00222020;  //add R4 , R1 , R2
 	assign Ram[5'h08] = 32'h00222824; // and  R5, R1, R2
@@ -19,6 +17,14 @@ module INSTMEM(Addr, Inst);
 	assign Ram[5'h0D] = 32'h00221826; //xor R3 , R1 , R2
 	assign Ram[5'h0E] = 32'h00021880; //sll R3 , R2 , 2
 	assign Ram[5'h0F] = 32'h00021882; //srl R3 , R2 , 2
+
+
+	assign Ram[5'h10] = 32'h400ba800; //mfc0 R29, Cause
+	assign Ram[5'h11] = 32'h401c7000; //mfc0 R28,EPC;
+	assign Ram[5'h12] = 32'h239C0004; //addi R28, R28, 4;
+	assign Ram[5'h13] = 32'h409c7000; //mtc R28, EPC;
+	assign Ram[5'h14] = 32'h42000018; //eret
+
 	
 
 	assign Inst = Ram[Addr[6:2]];

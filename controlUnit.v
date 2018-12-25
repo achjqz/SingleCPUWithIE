@@ -14,7 +14,7 @@ intr,inta,ov,sta,cause,exc,wsta,wcau,wepc,mtc0,mfc0,selpc);
 	output [1:0]mfc0,selpc;
 	output [31:0] cause;
 	
-	    // R型指�?
+	    // R型指
         wire i_add = (Op == 6'b000000 & Func == 6'b100000)?1:0;
         wire i_sub = (Op == 6'b000000 & Func == 6'b100010)?1:0;
         wire i_and = (Op == 6'b000000 & Func == 6'b100100)?1:0;
@@ -25,7 +25,7 @@ intr,inta,ov,sta,cause,exc,wsta,wcau,wepc,mtc0,mfc0,selpc);
         wire i_sra = (Op == 6'b000000 & Func == 6'b000011)?1:0;
         wire i_jr  = (Op == 6'b000000 & Func == 6'b001000)?1:0;
     
-        // I型指�?
+        // I型指
         wire i_addi = (Op == 6'b001000)?1:0;
         wire i_andi = (Op == 6'b001100)?1:0; 
         wire i_ori  = (Op == 6'b001101)?1:0;
@@ -36,7 +36,7 @@ intr,inta,ov,sta,cause,exc,wsta,wcau,wepc,mtc0,mfc0,selpc);
         wire i_bne  = (Op == 6'b000101)?1:0;
         wire i_lui  = (Op == 6'b001111)?1:0;
     
-        // J型指�?
+        // J型指
         wire i_j    = (Op == 6'b000010)?1:0;
         wire i_jal  = (Op == 6'b000011)?1:0; 
 	

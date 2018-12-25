@@ -5,7 +5,7 @@ module CPU(Clk, Clrn, Inst, Dread, Iaddr, Wmem, Dwirte, Daddr, intr, inta);
 	output [31:0] Iaddr, Daddr, Dwirte;
 	output Wmem, inta;
 	
-    parameter EXC_BASE = 32'h00000020;
+    parameter EXC_BASE = 32'h00000040;
     wire [31:0] p4, adr, npc, res, ra, alu_mem, alua, alub;
     wire [4:0] reg_dest, wn;
     wire [3:0] aluc;
