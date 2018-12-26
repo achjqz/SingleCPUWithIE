@@ -20,11 +20,15 @@ module test_main();
 		#100;
 		Reset <= 1;
 
+		#950
+		intr = 1;
+		#100
+		intr = 0;
 		#3000 $finish();
 	end
 	
 	always begin
-	   #25;
+	   #50;
 	   Clock = ~Clock; 
 	end
 endmodule
