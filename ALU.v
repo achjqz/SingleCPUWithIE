@@ -17,6 +17,7 @@ module ALU(X, Y, Aluc, R, Z, V);
 	MUX4X32 sel(d_as, d_and_or, d_xor_lui, d_sh, Aluc[1:0], R);
 	assign Z = ~|R;
 	
+	//溢出检查标志
 	assign V = ~Aluc[2] & ~X[31] & ~Y[31] &  R[31] & ~Aluc[1] & ~Aluc[0] |
 	           ~Aluc[2] &  X[31] &  Y[31] & ~R[31] & ~Aluc[1] & ~Aluc[0] |
 	           Aluc[2] & ~X[31] &  Y[31] &  R[31] & ~Aluc[1] & ~Aluc[0] |

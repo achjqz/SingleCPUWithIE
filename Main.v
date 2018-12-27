@@ -5,6 +5,6 @@ module Main(Clk, Clrn, inst, addr, aluout, memout, intr, inta);
 	wire [31:0] data;
 	wire        wmem;	
 	INSTMEM imem(addr, inst);
-	CPU cpu (Clk, Clrn, inst, memout, addr, wmem, aluout, data, intr, inta);
+	CPU cpu (Clk, Clrn, inst, memout, addr, wmem, data, aluout, intr, inta);
 	DATAMEM dmem(Clk, memout, data, aluout, wmem );
 endmodule

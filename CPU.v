@@ -1,11 +1,13 @@
-module CPU(Clk, Clrn, Inst, Dread, Iaddr, Wmem, Dwirte, Daddr, intr, inta);
+module CPU(Clk, Clrn, Inst, Dread, Iaddr, Wmem, DAddr, DWrite, intr, inta);
 
 	input Clk, Clrn, intr;
 	input [31:0] Inst, Dread;
-	output [31:0] Iaddr, Daddr, Dwirte;
+	output [31:0] Iaddr, DWrite, DAddr;
 	output Wmem, inta;
 	
-    parameter EXC_BASE = 32'h00000020;
+	//处理中断与异常的入口
+    parameter EXC_BASE = 32'h00000040;
+	
     wire [31:0] p4, adr, npc, res, ra, alu_mem, alua, alub;
     wire [4:0] reg_dest, wn;
     wire [3:0] aluc;
@@ -47,27 +49,27 @@ module CPU(Clk, Clrn, Inst, Dread, Iaddr, Wmem, Dwirte, Daddr, intr, inta);
 	
 	assign wn = reg_dest | {5{jal}}; 
 	RegFile rf (Inst[25:21], Inst[20:16], res, wn,
-	                wreg, Clk, Clrn, ra, Daddr);               
+	                wreg, Clk, Clrn, ra, DWrite);               
 			
 	MUX2X32 alu_a (ra , sa , shift , alua);
-	MUX2X32 alu_b (Daddr, immdiate, aluqb, alub);
+	MUX2X32 alu_b (DWrite, immdiate, aluqb, alub);
 
-	ALU alu(alua, alub, aluc, Dwirte, zero, overflow);
+	ALU alu(alua, alub, aluc, DAddr, zero, overflow);
 	
 	MUX2X5 reg_wn (Inst[15:11], Inst[20:16], regrt, reg_dest);
 
-	MUX2X32 res_mem(Dwirte, Dread, reg2reg , alu_mem);
+	MUX2X32 res_mem(DAddr, Dread, reg2reg , alu_mem);
 	MUX4X32 nextpc( p4 , adr , ra , jpc , Pcsrc , npc);		
 	
 
 	
 	
-	MUX2X32 sta_l1 (sta_l1_a0, Daddr,mtc0,sta_in);
+	MUX2X32 sta_l1 (sta_l1_a0, DWrite,mtc0,sta_in);
 	MUX2X32 sta_l2 ({4'h0,sta[31:4]}, {sta[27:0],4'h0}, exc, sta_l1_a0);
 	
-	MUX2X32 cau_l1 (cause, Daddr, mtc0,cau_in);
+	MUX2X32 cau_l1 (cause, DWrite, mtc0,cau_in);
 	
-	MUX2X32 epc_l1 (epc_l1_a0, Daddr, mtc0, epc_in);
+	MUX2X32 epc_l1 (epc_l1_a0, DWrite, mtc0, epc_in);
 	MUX2X32 epc_l2 (Iaddr, npc, inta, epc_l1_a0);
 	
 	

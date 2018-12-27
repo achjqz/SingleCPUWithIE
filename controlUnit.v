@@ -14,7 +14,7 @@ intr,inta,ov,sta,cause,exc,wsta,wcau,wepc,mtc0,mfc0,selpc);
 	output [1:0]mfc0,selpc;
 	output [31:0] cause;
 	
-	    // R型指�?
+	    // R型指
         wire i_add = (Op == 6'b000000 & Func == 6'b100000)?1:0;
         wire i_sub = (Op == 6'b000000 & Func == 6'b100010)?1:0;
         wire i_and = (Op == 6'b000000 & Func == 6'b100100)?1:0;
@@ -25,7 +25,7 @@ intr,inta,ov,sta,cause,exc,wsta,wcau,wepc,mtc0,mfc0,selpc);
         wire i_sra = (Op == 6'b000000 & Func == 6'b000011)?1:0;
         wire i_jr  = (Op == 6'b000000 & Func == 6'b001000)?1:0;
     
-        // I型指�?
+        // I型指
         wire i_addi = (Op == 6'b001000)?1:0;
         wire i_andi = (Op == 6'b001100)?1:0; 
         wire i_ori  = (Op == 6'b001101)?1:0;
@@ -36,14 +36,14 @@ intr,inta,ov,sta,cause,exc,wsta,wcau,wepc,mtc0,mfc0,selpc);
         wire i_bne  = (Op == 6'b000101)?1:0;
         wire i_lui  = (Op == 6'b001111)?1:0;
     
-        // J型指�?
+        // J型指
         wire i_j    = (Op == 6'b000010)?1:0;
         wire i_jal  = (Op == 6'b000011)?1:0; 
 	
 	// 判断是否为R型指令
     wire r_type = ~|Op;
 
-	//To cause a System Call exception.
+	//判断是否为系统调用指令
 	wire i_syscall = (r_type &(Func == 6'b001100))?1:0;
 
 	//ov: alu运算时判断的是否溢出
@@ -55,7 +55,8 @@ intr,inta,ov,sta,cause,exc,wsta,wcau,wepc,mtc0,mfc0,selpc);
 	i_lui | i_j | i_jal);
 
 
-	// sta 0: 外部中断, 1: 系统调用, 2: 未实现指令, 3: 溢出
+	// sta 0: 外部中断, 1: 系统调用, 2: 未实现指令, 3: 溢出 
+	//为“1”表示允许中断或异常
 	wire int_int = sta[0] & intr;
 	assign inta = int_int;
 
@@ -80,6 +81,8 @@ intr,inta,ov,sta,cause,exc,wsta,wcau,wepc,mtc0,mfc0,selpc);
 	wire rd_is_cause = (rd == 5'd13);
 	wire rd_is_epc = (rd == 5'd14);
     assign mtc0 = i_mtc0;
+
+	//i_eret 更新status
     assign wsta = exc | mtc0 & rd_is_status | i_eret;
     assign wcau = exc | mtc0 & rd_is_cause;
     assign wepc = exc | mtc0 & rd_is_epc;
@@ -88,7 +91,7 @@ intr,inta,ov,sta,cause,exc,wsta,wcau,wepc,mtc0,mfc0,selpc);
     assign mfc0[0] = i_mfc0 & rd_is_status | i_mfc0 & rd_is_epc;
     assign mfc0[1] = i_mfc0 & rd_is_cause | i_mfc0 & rd_is_epc;
 
-	// 执行PC 选择什么  00 原来   01: EPC 10 异常入口  
+	// 执行PC 选择什么  00 原来   01: EPC 10 处理异常入口  
     assign selpc[0] = i_eret;
     assign selpc[1] = exc;	
 	
@@ -96,7 +99,7 @@ intr,inta,ov,sta,cause,exc,wsta,wcau,wepc,mtc0,mfc0,selpc);
 	assign Wreg  = i_add  | i_sub  | i_and | i_or | i_xor  | 
 	i_sll | i_srl |i_sra |	i_addi | i_andi | 
 	i_ori | i_or | i_xori | i_lw  | i_lui |i_jal | i_mfc0;
-	assign Regrt  = i_addi | i_andi | i_ori | i_xori |i_lw |i_lui | i_mfc0;
+	assign Regrt  = i_addi | i_andi | i_ori | i_xori |i_lw |i_lui | i_mfc0;//mfc0选择rt输入
 	assign jal = i_jal;
 	assign Reg2reg  = i_lw;
 	assign Shift  = i_sll | i_srl |i_sra;
